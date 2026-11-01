@@ -363,6 +363,9 @@ body:not(.idle).director #pipDash{top:122px}
 #recWrap{position:fixed;inset:0;z-index:60;background:rgba(4,6,30,.6);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:16px}#recWrap.on{display:flex}
 #recCard{width:min(440px,100%);background:#fff;color:#10163c;border-radius:20px;padding:20px}#recCard h3{margin:0 0 6px;font-size:21px;font-weight:700}#recCard p{margin:0 0 9px;font-size:14px;line-height:1.4}#recCard ol{margin:0 0 9px;padding-left:20px;font-size:13.5px;line-height:1.45}#recCard li{margin-bottom:3px}#recCard .small{font-size:12.5px;color:#5b638f}
 .recording{cursor:none}.recording #resume{display:none!important}
+#alarmBanner button{flex:none;height:28px;padding:0 10px;border-radius:7px;background:#fff;color:#b91c1c;font-size:12.5px;font-weight:700;pointer-events:auto}
+.x-reject{display:none}.d-alarm.acked{background:#fff3d6;color:#7a5200;animation:none}.pn.acked{box-shadow:0 0 0 2px var(--amber)}
+.client #alarmBanner,.client #alarmWash{display:none}
 /* ---- modal + intro ---- */
 #receiptWrap{position:fixed;inset:0;z-index:40;background:rgba(4,6,30,.6);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:16px}
 #receiptWrap.on{display:flex}
@@ -392,7 +395,7 @@ body:not(.idle).director #pipDash{top:122px}
 .intro-cta .w{background:#fff;color:var(--blue)}.intro-cta .g{background:rgba(255,255,255,.14);box-shadow:0 0 0 1px rgba(255,255,255,.45) inset}
 #intro small{position:absolute;bottom:18px;font-size:12.5px;opacity:.74;padding:0 16px}
 #fatal{position:fixed;inset:0;z-index:99;background:var(--blue);display:none;align-items:center;justify-content:center;padding:30px;text-align:center;font-size:18px;font-weight:600}
-#toast{position:fixed;left:50%;top:124px;transform:translate(-50%,-14px);z-index:27;padding:8px 14px;border-radius:10px;background:#fff;color:var(--blue);font-weight:600;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 8px 22px rgba(3,6,40,.4)}
+#toast{position:fixed;left:50%;top:124px;transform:translate(-50%,-14px);z-index:45;padding:8px 14px;border-radius:10px;background:#fff;color:var(--blue);font-weight:600;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 8px 22px rgba(3,6,40,.4)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
 @media (max-width:1320px){#nav .lbl{display:none}}
@@ -549,7 +552,7 @@ body:not(.idle).director #pipDash{top:122px}
         </div>
         <div class="pn"><h4>Client orders</h4><div class="scr"><table class="orders x-orders"></table></div></div>
         <div class="d-two">
-          <div class="pn"><h4>Office actions</h4><div class="adm"><button class="abtn" id="admClear"><i data-lucide="shield-check"></i>Clear alarm &amp; release hold</button>
+          <div class="pn"><h4>Office actions</h4><div class="adm"><button class="abtn x-silence"><i data-lucide="bell-off"></i>Switch alarm off</button><button class="abtn x-release"><i data-lucide="shield-check"></i>Release hold &amp; resume</button><button class="abtn x-reject"><i data-lucide="rotate-ccw"></i>Reject load &amp; reload</button>
             <button class="abtn" id="admImmob"><i data-lucide="octagon-x"></i><span>Immobilise truck</span></button>
             <select id="admMsg" aria-label="Message the driver"><option value="">Message driver…</option><option value="0">Return to the approved route</option><option value="1">Slow down</option><option value="2">Call the office</option></select></div></div>
           <div class="pn"><h4>Latest events</h4><ol class="audit x-audit" style="max-height:124px"></ol></div>
@@ -570,7 +573,7 @@ body:not(.idle).director #pipDash{top:122px}
           <p class="d-note">Unaccounted water: <b class="k-var ok">0 L</b></p></div>
       </section>
       <section data-sec="alerts">
-        <div class="pn x-alarmBox"><h4>Current alarm</h4><p class="x-alarmT" style="margin:0 0 8px;font-size:14px;font-weight:600"></p><button class="abtn" id="admLab"><i data-lucide="zap"></i>Open Tamper Lab</button></div>
+        <div class="pn x-alarmBox"><h4>Current alarm</h4><p class="x-alarmT" style="margin:0 0 8px;font-size:14px;font-weight:600"></p><div class="adm"><button class="abtn x-silence"><i data-lucide="bell-off"></i>Switch alarm off</button><button class="abtn x-release"><i data-lucide="shield-check"></i>Release hold &amp; resume</button><button class="abtn x-reject"><i data-lucide="rotate-ccw"></i>Reject load &amp; reload</button><button class="abtn" id="admLab"><i data-lucide="zap"></i>Open Tamper Lab</button></div></div>
         <div class="pn"><h4>Audit trail</h4><ol class="audit x-audit"></ol></div>
       </section>
       <p class="d-note">Clock shows real-world equivalent time. Demo data throughout; the two grey trucks and earlier orders are samples.</p>
@@ -591,7 +594,7 @@ body:not(.idle).director #pipDash{top:122px}
   <button class="dt-v" data-k="c"><kbd>C</kbd><span id="dtView">Cab view</span></button>
   <div id="drvPad"><button data-p="w">▲</button><button data-p="a">◀</button><button data-p="s">▼</button><button data-p="d">▶</button></div>
 </div></div>
-<div id="alarmBanner"><i data-lucide="siren"></i><span id="alarmT">ALARM</span></div>
+<div id="alarmBanner"><i data-lucide="siren"></i><span id="alarmT">ALARM</span><button class="x-silence">Switch alarm off</button></div>
 <div id="toast"></div>
 <div id="recWrap"><div id="recCard" role="dialog" aria-label="Download the film">
   <h3>Download the film</h3>
@@ -1491,7 +1494,7 @@ function setFilm(on){filmOn=on;Sound.music(on);document.body.classList.toggle('f
 function setDirector(on){director=on;document.body.classList.toggle('director',on);UI.sync();if(on){UI.clearPreset();controls.enabled=false;}else{controls.enabled=true;if(camera.fov!==40){UI.fovTarget=40;}}}
 
 /* ================= TAMPER SCENARIOS ================= */
-function setAlarm(msg){S.alarm=msg;document.body.classList.toggle('alarm',!!msg);if(msg){$('#alarmT').textContent=msg;}}
+function setAlarm(msg){S.alarm=msg;S.silenced=false;document.body.classList.toggle('alarm',!!msg);if(msg){$('#alarmT').textContent=msg;}}
 const SCEN={
  fake:{title:'Fake Plate / Cloned RFID Tag',what:'A rogue truck shows up with a copied tag and a borrowed plate.',verdict:'Plate and tag do not match any open order. The gate stays down and the valve never receives an open command.',parts:['anpr','rfid'],
    async run(){
@@ -1729,7 +1732,8 @@ const Ops={orders:[],log:[],notes:[],hist:[],logDirty:true,notesDirty:true,pipKi
     }
     if(dashOpen){
       const T=this.curTab;
-      const aT=S.alarm||'All clear. No active alarms.';this.setAll('.x-alarmT',e=>{if(e.textContent!==aT)e.textContent=aT;});this.setAll('.x-alarmBox',e=>e.classList.toggle('bad',!!S.alarm));
+      const aT=S.alarm?(S.silenced?'Alarm off, hold still on. ':'')+S.alarm:'All clear. No active alarms.';this.setAll('.x-alarmT',e=>{if(e.textContent!==aT)e.textContent=aT;});this.setAll('.x-alarmBox',e=>{e.classList.toggle('bad',!!S.alarm&&!S.silenced);e.classList.toggle('acked',!!S.alarm&&!!S.silenced);});
+      this.setAll('#dash .x-silence',e=>e.style.display=S.alarm&&!S.silenced?'':'none');this.setAll('.x-release',e=>e.style.display=S.alarm&&S.tds<=500?'':'none');this.setAll('.x-reject',e=>e.style.display=S.alarm&&S.tds>500?'inline-flex':'none');
       $('#dAlertN').textContent=S.alarm?'1':'';$('#dAlertN').style.display=S.alarm?'':'none';
       const rows=[...(this.orders.map(o=>{const cur=o===S.order,lbl=!cur?'DELIVERED':S.alarm?'ON HOLD':S.completed>=7?'DELIVERED':S.status==='IDLE'?'CONFIRMED':S.status;return{...o,truck:'KSA 4821 RSA',state:lbl,drv:cur?(S.manual?'You':'Khalid A.'):'Khalid A.',eta:cur&&S.completed<5?this.clock(CUM[6]):'-',live:cur};})),...DEMO_ORDERS.map(o=>({...o,drv:'Demo',eta:'-'}))];
       const ok=rows.map(o=>`<tr class="${o.live?'live':''}"><td><code>${o.no}</code></td><td>${o.site}</td><td><code>${fmtL(o.qty)}</code></td><td><code>${o.truck}</code></td><td>${o.drv}</td><td><code>${o.eta}</code></td><td><span class="chipS ${o.state==='ON HOLD'?'bad':o.state==='DELIVERED'?'done':''}">${o.state}</span></td></tr>`).join('');
@@ -1844,8 +1848,16 @@ const Driver={v:0,view:'chase',gateMax:sFor(-71-5.95),exitMax:sFor(-44),seated:f
   clearAlarm(){
     if(S.scenario){UI.resetLab();return;}
     if(!S.alarm){UI.toast('No active alarm');return;}
-    if(S.tds>500){UI.toast('Load is contaminated, so the outlet stays locked. Start a new order.');return;}
+    if(S.tds>500){UI.toast('This load is contaminated. Use Reject load & reload.');return;}
+    if(S.hatch>.05){Sound.deny();UI.toast('Close the roof hatch first: press 2 for the driver seat, then H');return;}
     setAlarm(null);S.lockedOut=false;S.faultParts=[];ev('Office cleared the alarm and released the hold','ok');Ops.notify('All good. Your delivery is back on track.');Sound.ok();UI.sync();
+  },
+  silence(){if(!S.alarm||S.silenced)return;S.silenced=true;document.body.classList.remove('alarm');Ops.addLog(`Alarm switched off from the ${ROLE==='admin'?'office':ROLE==='driver'?'driver seat':'simulator'}. Hold stays on.`,'bad');Sound.click();UI.sync();},
+  rejectLoad(){
+    if(S.scenario||!S.manual){UI.resetLab();return;}
+    setAlarm(null);S.lockedOut=false;S.faultParts=[];S.tds=185;S.vol=0;S.loaded=0;S.client=0;S.hatch=0;S.truckS=S_POS.bay;S.lat=0;S.latV=0;this.v=0;S.stage=1;S.completed=1;S.running=false;S.pinging=false;S.fenceOn=false;S.chuteSeated=false;S.bayReady=false;
+    FENCE.mat.color.setHex(COL.green);FENCE.fill.material.color.setHex(COL.green);FENCE.wall.material.color.setHex(COL.green);
+    Ops.hist=[];setStatus('TO BAY');hmi('DRIVE TO BAY','#9fb0ff');ev('Office rejected the load. Tank drained, truck back at the gantry.','ok');Ops.notify('We are preparing a fresh load for you. Your updated arrival time will show shortly.');Sound.valve();UI.sync();
   },
   immobilise(){
     if(!S.manual){UI.toast('Immobilise works when a person is driving. Press 2 to take the wheel first.');return;}
@@ -1952,7 +1964,11 @@ const Driver={v:0,view:'chase',gateMax:sFor(-71-5.95),exitMax:sFor(-44),seated:f
     }
   },
   instr(){
-    if(S.alarm)return ['Alarm active. The office has to release it (press 3 to be the Admin).','bad'];
+    if(S.alarm){
+      if(S.tds>500)return ['Contaminated load. The office must reject it (press 3 to be the Admin).','bad'];
+      if(S.hatch>.05)return ['Close the roof hatch: press H. Then the office can release the hold.','bad'];
+      return ['Hatch closed. The office must release the hold (press 3 to be the Admin).','bad'];
+    }
     if(S.immob)return ['Engine immobilised by the office.','bad'];
     if(S.completed>=7)return ['Job complete. Choose Driver again for a new job.','ok'];
     if(S.running&&S.stage===0)return ['Dispatch is sending you the job…',''];
@@ -2327,7 +2343,7 @@ $('#drClose').onclick=()=>{ROLE='free';UI.syncRoles();UI.openDrawer(false);};
 $('#dashBtn').onclick=()=>{Sound.init();Sound.click();UI.openDash(!document.body.classList.contains('dash-open'));};
 $('#dashClose').onclick=()=>{ROLE='free';UI.syncRoles();UI.openDash(false);};
 document.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>setRole(b.dataset.role));
-$('#admClear').onclick=()=>Driver.clearAlarm();
+document.addEventListener('click',e=>{if(e.target.closest('.x-silence'))Driver.silence();else if(e.target.closest('.x-release'))Driver.clearAlarm();else if(e.target.closest('.x-reject'))Driver.rejectLoad();});
 $('#admLab').onclick=()=>{UI.openDash(false);UI.openLab(true);};
 $('#admImmob').onclick=()=>Driver.immobilise();
 $('#admMsg').onchange=e=>{if(e.target.value!==''){Driver.message(+e.target.value);e.target.value='';}};
@@ -2428,7 +2444,7 @@ function updateRigs(rdt,dt){
   const pk=(performance.now()*.00035)%1;FENCE.pulse.scale.setScalar(pk*FENCE_R);FENCE.pulse.material.opacity=(1-pk)*.5;
   FENCE.wall.material.opacity=S.fenceOn?.75+.2*Math.sin(performance.now()*.006):.3;FENCE.fill.material.opacity=S.fenceOn?.2:.08;
   // alarm visuals
-  const alarm=!!S.alarm,on=alarm&&flash();
+  const alarm=!!S.alarm&&!S.silenced,on=alarm&&flash();
   G.beaconMat.emissive.setHex(on?COL.red:0x551010);G.beaconMat.emissiveIntensity=on?5:.5;
   const truckAlarm=alarm&&(S.scenario==='hatch'||S.scenario==='salt'||S.manual);
   TR.beaconMat.emissive.setHex(truckAlarm&&on?COL.red:0x551010);TR.beaconMat.emissiveIntensity=truckAlarm&&on?5:.5;TR.beaconGlow.material.opacity=truckAlarm&&on?.9:0;
@@ -2531,7 +2547,7 @@ function tick(){
   const dist=camera.position.distanceTo(controls.target),want=clamp(dist*.85,38,170);
   if(Math.abs(want-sunSize)>4){sunSize=want;const c=sun.shadow.camera;c.left=-want;c.right=want;c.top=want;c.bottom=-want;c.updateProjectionMatrix();}
   sun.target.position.copy(controls.target).setY(0);sun.position.copy(sun.target.position).addScaledVector(SUN_DIR,170);
-  Sound.update(paused?0:Math.abs(S.truckV)*2,!paused&&(S.filling||S.discharging),!!S.alarm);
+  Sound.update(paused?0:Math.abs(S.truckV)*2,!paused&&(S.filling||S.discharging),!!S.alarm&&!S.silenced);
   if(frame%3===0){drawRadar();drawScreens();updateHud();Ops.update();Driver.hud();}
   if(trailT++%10===0&&S.status!=='IDLE'){trail.push([truck.position.x,truck.position.z]);if(trail.length>300)trail.shift();}
   if(S.truckS<=S_POS.staging+.01)trail.length=0;
