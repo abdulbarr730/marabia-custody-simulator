@@ -364,7 +364,7 @@ body:not(.idle).director #pipDash{top:122px}
 #recCard{width:min(440px,100%);background:#fff;color:#10163c;border-radius:20px;padding:20px}#recCard h3{margin:0 0 6px;font-size:21px;font-weight:700}#recCard p{margin:0 0 9px;font-size:14px;line-height:1.4}#recCard ol{margin:0 0 9px;padding-left:20px;font-size:13.5px;line-height:1.45}#recCard li{margin-bottom:3px}#recCard .small{font-size:12.5px;color:#5b638f}
 .recording{cursor:none}.recording #resume{display:none!important}
 #alarmBanner button{flex:none;height:28px;padding:0 10px;border-radius:7px;background:#fff;color:#b91c1c;font-size:12.5px;font-weight:700;pointer-events:auto}
-.x-reject{display:none}.d-alarm.acked{background:#fff3d6;color:#7a5200;animation:none}.pn.acked{box-shadow:0 0 0 2px var(--amber)}
+.x-reject{display:none}.abtn.dim{opacity:.55}.d-alarm.acked{background:#fff3d6;color:#7a5200;animation:none}.pn.acked{box-shadow:0 0 0 2px var(--amber)}
 .client #alarmBanner,.client #alarmWash{display:none}
 /* ---- modal + intro ---- */
 #receiptWrap{position:fixed;inset:0;z-index:40;background:rgba(4,6,30,.6);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:16px}
@@ -552,7 +552,7 @@ body:not(.idle).director #pipDash{top:122px}
         </div>
         <div class="pn"><h4>Client orders</h4><div class="scr"><table class="orders x-orders"></table></div></div>
         <div class="d-two">
-          <div class="pn"><h4>Office actions</h4><div class="adm"><button class="abtn x-silence"><i data-lucide="bell-off"></i>Switch alarm off</button><button class="abtn x-release"><i data-lucide="shield-check"></i>Release hold &amp; resume</button><button class="abtn x-reject"><i data-lucide="rotate-ccw"></i>Reject load &amp; reload</button>
+          <div class="pn"><h4>Office actions</h4><div class="adm"><button class="abtn x-silence"><i data-lucide="bell-off"></i>Switch alarm off</button><button class="abtn x-release"><i data-lucide="shield-check"></i>Release</button><button class="abtn x-reject"><i data-lucide="rotate-ccw"></i>Reject load &amp; reload</button>
             <button class="abtn" id="admImmob"><i data-lucide="octagon-x"></i><span>Immobilise truck</span></button>
             <select id="admMsg" aria-label="Message the driver"><option value="">Message driver…</option><option value="0">Return to the approved route</option><option value="1">Slow down</option><option value="2">Call the office</option></select></div></div>
           <div class="pn"><h4>Latest events</h4><ol class="audit x-audit" style="max-height:124px"></ol></div>
@@ -573,7 +573,7 @@ body:not(.idle).director #pipDash{top:122px}
           <p class="d-note">Unaccounted water: <b class="k-var ok">0 L</b></p></div>
       </section>
       <section data-sec="alerts">
-        <div class="pn x-alarmBox"><h4>Current alarm</h4><p class="x-alarmT" style="margin:0 0 8px;font-size:14px;font-weight:600"></p><div class="adm"><button class="abtn x-silence"><i data-lucide="bell-off"></i>Switch alarm off</button><button class="abtn x-release"><i data-lucide="shield-check"></i>Release hold &amp; resume</button><button class="abtn x-reject"><i data-lucide="rotate-ccw"></i>Reject load &amp; reload</button><button class="abtn" id="admLab"><i data-lucide="zap"></i>Open Tamper Lab</button></div></div>
+        <div class="pn x-alarmBox"><h4>Current alarm</h4><p class="x-alarmT" style="margin:0 0 8px;font-size:14px;font-weight:600"></p><div class="adm"><button class="abtn x-silence"><i data-lucide="bell-off"></i>Switch alarm off</button><button class="abtn x-release"><i data-lucide="shield-check"></i>Release</button><button class="abtn x-reject"><i data-lucide="rotate-ccw"></i>Reject load &amp; reload</button><button class="abtn" id="admLab"><i data-lucide="zap"></i>Open Tamper Lab</button></div></div>
         <div class="pn"><h4>Audit trail</h4><ol class="audit x-audit"></ol></div>
       </section>
       <p class="d-note">Clock shows real-world equivalent time. Demo data throughout; the two grey trucks and earlier orders are samples.</p>
@@ -1733,7 +1733,7 @@ const Ops={orders:[],log:[],notes:[],hist:[],logDirty:true,notesDirty:true,pipKi
     if(dashOpen){
       const T=this.curTab;
       const aT=S.alarm?(S.silenced?'Alarm off, hold still on. ':'')+S.alarm:'All clear. No active alarms.';this.setAll('.x-alarmT',e=>{if(e.textContent!==aT)e.textContent=aT;});this.setAll('.x-alarmBox',e=>{e.classList.toggle('bad',!!S.alarm&&!S.silenced);e.classList.toggle('acked',!!S.alarm&&!!S.silenced);});
-      this.setAll('#dash .x-silence',e=>e.style.display=S.alarm&&!S.silenced?'':'none');this.setAll('.x-release',e=>e.style.display=S.alarm&&S.tds<=500?'':'none');this.setAll('.x-reject',e=>e.style.display=S.alarm&&S.tds>500?'inline-flex':'none');
+      this.setAll('#dash .x-silence',e=>e.style.display=S.alarm&&!S.silenced?'':'none');this.setAll('.x-release',e=>e.classList.toggle('dim',!S.alarm&&!S.immob||S.tds>500));this.setAll('.x-reject',e=>e.style.display=S.alarm&&S.tds>500?'inline-flex':'none');
       $('#dAlertN').textContent=S.alarm?'1':'';$('#dAlertN').style.display=S.alarm?'':'none';
       const rows=[...(this.orders.map(o=>{const cur=o===S.order,lbl=!cur?'DELIVERED':S.alarm?'ON HOLD':S.completed>=7?'DELIVERED':S.status==='IDLE'?'CONFIRMED':S.status;return{...o,truck:'KSA 4821 RSA',state:lbl,drv:cur?(S.manual?'You':'Khalid A.'):'Khalid A.',eta:cur&&S.completed<5?this.clock(CUM[6]):'-',live:cur};})),...DEMO_ORDERS.map(o=>({...o,drv:'Demo',eta:'-'}))];
       const ok=rows.map(o=>`<tr class="${o.live?'live':''}"><td><code>${o.no}</code></td><td>${o.site}</td><td><code>${fmtL(o.qty)}</code></td><td><code>${o.truck}</code></td><td>${o.drv}</td><td><code>${o.eta}</code></td><td><span class="chipS ${o.state==='ON HOLD'?'bad':o.state==='DELIVERED'?'done':''}">${o.state}</span></td></tr>`).join('');
@@ -1846,11 +1846,13 @@ const Driver={v:0,view:'chase',gateMax:sFor(-71-5.95),exitMax:sFor(-44),seated:f
   once(k,secs=8){const n=performance.now();if(n-(this.warnAt[k]||-1e9)<secs*1000)return false;this.warnAt[k]=n;return true;},
   fault(msg,parts,clientNote){setAlarm(msg);S.lockedOut=true;S.faultParts=parts;Sound.deny();if(clientNote)Ops.notify(clientNote,'bad');UI.sync();},
   clearAlarm(){
-    if(S.scenario){UI.resetLab();return;}
-    if(!S.alarm){UI.toast('No active alarm');return;}
-    if(S.tds>500){UI.toast('This load is contaminated. Use Reject load & reload.');return;}
-    if(S.hatch>.05){Sound.deny();UI.toast('Close the roof hatch first: press 2 for the driver seat, then H');return;}
-    setAlarm(null);S.lockedOut=false;S.faultParts=[];ev('Office cleared the alarm and released the hold','ok');Ops.notify('All good. Your delivery is back on track.');Sound.ok();UI.sync();
+    if(S.scenario){UI.resetLab();UI.toast('Released. The tamper demo has ended and the world is reset.');Sound.ok();return;}
+    if(S.tds>500){Sound.deny();UI.toast('This water failed the quality check, so it cannot be released. Use Reject load & reload.');return;}
+    const wasImmob=S.immob;
+    if(wasImmob){S.immob=false;$('#admImmob span').textContent='Immobilise truck';Ops.addLog('Office released the engine');}
+    if(!S.alarm){if(wasImmob){Sound.ok();UI.toast('Engine released. The driver can move again.');}else UI.toast('Nothing is on hold right now');UI.sync();return;}
+    if(S.hatch>.05){const h=S.hatch;anim(.8,k=>S.hatch=h*(1-k));ev('Roof hatch closed on office instruction','ok');}
+    setAlarm(null);S.lockedOut=false;S.faultParts=[];ev('Office released the hold','ok');Ops.notify('All good. Your delivery is back on track.');Sound.ok();UI.toast(S.manual?'Released. Press 2 to carry on driving.':'Released.');UI.sync();
   },
   silence(){if(!S.alarm||S.silenced)return;S.silenced=true;document.body.classList.remove('alarm');Ops.addLog(`Alarm switched off from the ${ROLE==='admin'?'office':ROLE==='driver'?'driver seat':'simulator'}. Hold stays on.`,'bad');Sound.click();UI.sync();},
   rejectLoad(){
@@ -1966,7 +1968,7 @@ const Driver={v:0,view:'chase',gateMax:sFor(-71-5.95),exitMax:sFor(-44),seated:f
   instr(){
     if(S.alarm){
       if(S.tds>500)return ['Contaminated load. The office must reject it (press 3 to be the Admin).','bad'];
-      if(S.hatch>.05)return ['Close the roof hatch: press H. Then the office can release the hold.','bad'];
+      if(S.hatch>.05)return ['Close the roof hatch (H), or ask the office to release (press 3 to be the Admin).','bad'];
       return ['Hatch closed. The office must release the hold (press 3 to be the Admin).','bad'];
     }
     if(S.immob)return ['Engine immobilised by the office.','bad'];
