@@ -1066,7 +1066,7 @@ const truck=new THREE.Group();scene.add(truck);
   cyl(.09,2.6,MAT.chrome,T,2.72,3.1,1.02,10);    // exhaust
   // door logo
   const dl=lockupTex(320,96);
-  for(const z of[1.215,-1.215]){const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,.45),basic(dl));m.position.set(3.72,2.46,z);if(z<0)m.rotation.y=PI;T.add(m);}
+  for(const z of[1.215,-1.215]){const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,.45),basic(dl));m.position.set(3.72,2.46,z);if(z<0)m.rotation.y=PI;T.add(m);(TR.doorLogos=TR.doorLogos||[]).push(m);}
   // plate
   TR.plateTex=canvasTex(256,64,()=>{});
   TR.plate=new THREE.Mesh(new THREE.PlaneGeometry(1.15,.29),basic(TR.plateTex));TR.plate.rotation.y=PI/2;TR.plate.position.set(5.885,1.2,0);T.add(TR.plate);
@@ -1074,7 +1074,7 @@ const truck=new THREE.Group();scene.add(truck);
   TR.setPlate=(txt,bad)=>{const g=TR.plateTex.userData.g;g.fillStyle='#fff';g.fillRect(0,0,256,64);g.strokeStyle='#111';g.lineWidth=4;g.strokeRect(2,2,252,60);g.fillStyle=bad?'#b91c1c':'#101010';g.font='700 34px IBM Plex Mono,monospace';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,128,34);TR.plateTex.needsUpdate=true;};
   // tank: white/blue with cut-away windows
   const WIN0=-5.0,WIN1=.6,sec=(x0,x1,start,len,mat,r=R)=>{const g=new THREE.CylinderGeometry(r,r,x1-x0,40,1,true,start*DEG,len*DEG);g.rotateZ(-PI/2);g.translate((x0+x1)/2,CY,0);const m=new THREE.Mesh(g,mat);m.castShadow=true;m.receiveShadow=true;T.add(m);return m;};
-  const shellW=M(0xfbfcff,{roughness:.28,metalness:.08,side:THREE.DoubleSide}),shellB=M(COL.blue,{roughness:.3,side:THREE.DoubleSide});
+  const shellW=M(0xfbfcff,{roughness:.28,metalness:.08,side:THREE.DoubleSide}),shellB=M(COL.blue,{roughness:.3,side:THREE.DoubleSide});TR.shellB=shellB;TR.brand=[];
   sec(TR.X0,WIN0,0,360,shellW);sec(WIN1,TR.X1,0,360,shellW);
   sec(WIN0,WIN1,215,110,shellW);sec(WIN0,WIN1,35,110,shellB);
   for(const x of[TR.X0,TR.X1]){const c=new THREE.SphereGeometry(R,28,14);c.scale(.28,1,1);add(c,x<0?shellW:shellW,T,x,CY,0);}
@@ -1112,7 +1112,7 @@ const truck=new THREE.Group();scene.add(truck);
   for(let i=0;i<7;i++)strut([-6.42,.9+i*.42,-.28],[-6.42,.9+i*.42,.28],.012,MAT.chrome,T,true);for(const z of[-.28,.28])strut([-6.42,.8,z],[-6.1,3.6,z],.018,MAT.chrome,T,true);
   // logos on upper shell, both sides
   const tl=lockupTex(800,160,'#0A24DA');
-  for(const z of[1,-1]){const m=new THREE.Mesh(new THREE.PlaneGeometry(3.7,.74),basic(tl));const a=52*DEG;m.position.set(-2.2,CY+(R+.045)*Math.sin(a),z*(R+.045)*Math.cos(a));m.rotation.order='YXZ';m.rotation.y=z>0?0:PI;m.rotation.x=-a*.98;T.add(m);}
+  for(const z of[1,-1]){const m=new THREE.Mesh(new THREE.PlaneGeometry(3.7,.74),basic(tl));const a=52*DEG;m.position.set(-2.2,CY+(R+.045)*Math.sin(a),z*(R+.045)*Math.cos(a));m.rotation.order='YXZ';m.rotation.y=z>0?0:PI;m.rotation.x=-a*.98;T.add(m);TR.brand.push(m);}
   // RFID tag
   TR.tagMat=emissive(0x2f6bff,2);box(.34,.16,.04,TR.tagMat,T,2.2,1.05,.68,false);box(.34,.16,.04,TR.tagMat,T,2.2,1.05,-.68,false);
   // rear outlet + discharge meter
@@ -1127,6 +1127,7 @@ const truck=new THREE.Group();scene.add(truck);
   TR.beaconGlow=glow(COL.red,2.4,T,3,4.5,0,0);
 }
 
+TR.setClone=on=>{TR.shellB.color.setHex(on?0x5b616b:COL.blue);TR.brand.concat(TR.doorLogos).forEach(m=>m.visible=!on);};
 /* hose for delivery */
 const hoseCurve=new THREE.QuadraticBezierCurve3(new V3(),new V3(),new V3());
 const hose=new THREE.Mesh(new THREE.BufferGeometry(),M(0x0f172a,{roughness:.8}));hose.castShadow=true;hose.visible=false;scene.add(hose);
@@ -1329,7 +1330,7 @@ const STAGES=[
    shot({p:[-51,7.3,8],p1:[-52,6.2,6.6],t:[GX,5.4,0],t1:[GX,4.8,0],dur:5,fov:32});
    Sound.valve();await anim(1,k=>S.hatch=k);ev('Roof hatch opened');
    Sound.motor(2.2);const l0=G.chuteLen;await anim(2.2,k=>G.setChute(lerp(l0,3.5,k)));
-   S.chuteSeated=true;S.bayReady=true;G.collarLedMat.emissive.setHex(COL.green);hmi('BAY READY','#5ff0c2');ev('Hatch sensor: chute fully seated','ok');pktTo('hatch');Sound.ok();
+   S.chuteSeated=true;S.bayReady=true;G.collarLedMat.emissive.setHex(COL.green);hmi('BAY READY','#5ff0c2');ev('Hatch sensor: chute fully seated','ok');ev('Onboard unit confirms this truck is at the gantry','ok');pktTo('hatch');Sound.ok();
    await wait(1);
    setActive(['valve','plc']);shot({p:[-54,9.8,8],p1:[-54.6,9.4,7],t:[GX,PIPE_Y+.3,Z_VALVE],t1:[GX,PIPE_Y+.3,Z_VALVE],dur:3.4,fov:28});
    await wait(.5);pktTo('valve',0x7dffc4);setValve(true);Sound.valve();ev('PLC opens the motorized valve','ok');
@@ -1447,7 +1448,7 @@ function clearWorld(){
   Object.assign(S,{vol:0,client:0,truckS:S_POS.staging,truckV:0,valveTarget:0,valve:0,hatch:0,gate:0,outlet:false,fenceOn:false,tds:185,q:82,flow:0,filling:false,discharging:false,siphon:false,wellFlow:false,hmiMsg:'READY',hmiTone:'#9fb0ff',bayReady:false,chuteSeated:false,pinging:false,bigstat:false,plate:'KSA 4821 RSA',loaded:0,lockedOut:false});
   G.setChute(1.1);G.collarLedMat.emissive.setHex(COL.red);G.gateLight.emissive.setHex(COL.red);G.rfidLedMat.emissive.setHex(0x2a48e8);
   G.straps.forEach(s=>s.scale.set(1,1,1));G.xdcr.forEach(x=>{x.rotation.set(0,0,0);x.position.y=PIPE_R+.09;x.position.x=0;});
-  TR.setPlate(S.plate);TR.plateGlow.material.opacity=0;hose.visible=false;G.beamMat.opacity=0;
+  TR.setPlate(S.plate);TR.setClone(false);S.ghost=null;TR.plateGlow.material.opacity=0;hose.visible=false;G.beamMat.opacity=0;
   setAlarm(null);setBad([]);setActive([]);resetBalance();FENCE.mat.color.setHex(COL.green);FENCE.fill.material.color.setHex(COL.green);FENCE.wall.material.color.setHex(COL.green);
   $('#feed').innerHTML='';$('#receiptWrap').classList.remove('on');Ops.reset();Ops.pip(null);Ops.hero(null);S.lat=0;S.latV=0;S.faultParts=[];S.immob=false;Driver.v=0;
 }
@@ -1504,6 +1505,28 @@ const SCEN={
      await wait(1.2);ev('RFID tag ID does not match the plate: clone suspected','bad');pktTo('rfid',0xff9090);
      await wait(.8);setAlarm('ACCESS DENIED: identity mismatch. Gate and valve stay locked.');hmi('ACCESS DENIED','#ff8a8a');
      shot({p:[-82,3,10],p1:[-79,3.4,10],t:[-71,1.4,0],t1:[-71,1.4,0],dur:5,fov:36});ev('Security alerted with plate photo','bad');
+   }},
+ clone:{title:'Same Plate + Same RFID Tag on Another Truck',what:'A different truck arrives wearing a copied plate and a copied tag, so the gate cannot tell it apart.',verdict:'The gate is fooled, as expected. Before opening the valve, the PLC asks the real truck\'s onboard unit to confirm it is here, and it reports from the highway. The valve stays locked and no water is lost. This onboard check is a recommended upgrade to build into the real system.',parts:['gps','plc'],
+   async run(){
+     TR.setClone(true);S.ghost={x:20,z:-16};setStatus('AUTHENTICATING');say('Tamper · Clone','A different truck arrives wearing a copied plate and a copied tag.');
+     shot({p:[12,1,6.8],p1:[3.2,1.5,7],t:[3,2.1,0],t1:[1,2.6,0],rel:'both',dur:4,fov:36});
+     S.truckS=S_POS.gate-22;await drive(S_POS.gate,4);
+     shot({p:[-64.6,5.9,-1.8],p1:[-65,5.6,-1.9],t:plateW().toArray(),t1:plateW().toArray(),dur:2.4,fov:26});
+     beamOn(anprW(),plateW(),COL.green,1.3);Sound.scan();await wait(1);ev('ANPR reads KSA 4821 RSA: on the order','ok');Sound.ok();pktTo('anpr');
+     await wait(1.2);shot({p:[-67.6,2.5,-7.4],p1:[-68.4,2.7,-7],t:[-71.6,2.5,5],t1:[-72.2,2.3,4],fov:32,dur:2.4});
+     const rp=new V3(-71,3.1,5.4);for(let i=0;i<3;i++)setTimeout(()=>pingRing(rp,0x60a5fa,3.2,1,false),i*260);Sound.scan();G.rfidLedMat.emissive.setHex(COL.green);
+     await wait(1.2);ev('RFID tag matches the same plate','ok');pktTo('rfid');Sound.ok();
+     await wait(.8);say('Tamper · Clone','Both checks pass, because both were copied. The gate is fooled and opens.');G.gateLight.emissive.setHex(COL.green);Sound.motor(1.2);
+     shot({p:[-82,3.4,12],p1:[-70,5,14],t:[-68,3,0],t1:[-58,4,0],dur:5.2,fov:38});
+     anim(1.2,k=>S.gate=k);await wait(.6);await drive(S_POS.bay,4.4);anim(1.2,k=>S.gate=1-k);G.gateLight.emissive.setHex(COL.red);hmi('TRUCK IN BAY','#9fb0ff');
+     shot({p:[-51,7.3,8],p1:[-52,6.2,6.6],t:[GX,5.4,0],t1:[GX,4.8,0],dur:5,fov:32});
+     Sound.valve();await anim(.8,k=>S.hatch=k);Sound.motor(1.6);const l0=G.chuteLen;await anim(1.6,k=>G.setChute(lerp(l0,3.5,k)));S.chuteSeated=true;G.collarLedMat.emissive.setHex(COL.green);ev('Hatch sensor: chute fully seated','ok');
+     say('Tamper · Clone','Before opening the valve, the PLC asks this truck for its onboard unit.');pktTo('hatch');
+     await wait(2);ev('Real onboard unit reports from the highway, 18 km away','bad');Sound.deny();hmi('TRUCK MISMATCH','#ff8a8a');
+     setAlarm('TRUCK MISMATCH: real KSA 4821 RSA is 18 km away. Valve stays locked.');S.lockedOut=true;Ops.notify('Your delivery is paused while we check something. We will update you shortly.','bad');ev('Valve stays locked. No water released.','bad');
+     shot({p:[-54,9.8,8],p1:[-54.6,9.4,7],t:[GX,PIPE_Y+.3,Z_VALVE],t1:[GX,PIPE_Y+.3,Z_VALVE],dur:3,fov:28});
+     await wait(3);ev('ANPR photo shows an unbranded truck. Security alerted.','bad');
+     shot({p:[-44,3.2,14],p1:[-46,3.6,13],t:[-58,2.6,0],t1:[-58,2.6,0],dur:6,fov:36});
    }},
  chute:{title:'Chute Not Seated in Hatch',what:'The driver is in a hurry and the chute stops short of the hatch.',verdict:'No seat signal, no valve. Water never leaves the pipe, so there is no roof flood and no loss.',parts:['chute','valve'],
    async run(){
@@ -1576,7 +1599,7 @@ const HW_SHORT={anpr:'ANPR',rfid:'RFID',valve:'Valve',meter:'TUF-2000B',plc:'PLC
 const JOBS=[
  {plc:'Receives the order over 4G and stores the quota as the fill limit.',gps:'Reports the truck ready in the staging lane.'},
  {anpr:'Photographs the plate and sends the number to the PLC.',rfid:'Reads the hidden chassis tag by radio.',plc:'Compares plate and tag with the order. Both match, so it lifts the gate.',gps:'Logs arrival at the station.'},
- {chute:'Lowers into the hatch. Collar sensor reports "seated".',plc:'Checks every interlock, then commands the valve to open.',valve:'Rotates open on the PLC command. Ring turns green.',gps:'Reed switch logs a permitted hatch opening at the gantry.'},
+ {chute:'Lowers into the hatch. Collar sensor reports "seated".',plc:'Checks every interlock, then commands the valve to open.',valve:'Rotates open on the PLC command. Ring turns green.',gps:'Confirms this truck really is at the gantry, and logs the permitted hatch opening.'},
  {meter:'Times sound pulses across the pipe and reports litres over RS-485.',plc:'Compares the total to the quota and watches signal quality Q.',valve:'Held open while every check stays healthy.',chute:'Stays seated. Any lift stops the flow.',gps:'Level probe rises, giving a second opinion on the meter.'},
  {meter:'Reports the exact quota has been reached.',plc:'Sends the close command in the same instant.',valve:'Slams shut. Ring turns red.',chute:'Raises only after flow reads zero.',gps:'Arms the hatch seal and records the loaded level.'},
  {gps:'Sends position, speed, TDS, level and hatch state to dashboard and app.',outlet:'Stays locked. Outside the geofence it ignores every request.',plc:'Closes the loading record and uploads it.'},
@@ -1594,7 +1617,7 @@ const NOTES=[
  null,
  ()=>'Your receipt is ready.',
 ];
-const SCEN_MIN={fake:2,chute:9,strap:13,hatch:30,salt:36};
+const SCEN_MIN={clone:7,fake:2,chute:9,strap:13,hatch:30,salt:36};
 const DEMO_ORDERS=[{no:'MA-481207',site:'Al Malqa Tower Site',qty:10000,state:'DELIVERED',truck:'KSA 1907 RSA'},{no:'MA-481166',site:'Exit 9 Logistics Park',qty:15000,state:'DELIVERED',truck:'KSA 3360 RSA'}];
 const Ops={orders:[],log:[],notes:[],hist:[],logDirty:true,notesDirty:true,pipKind:null,heroKind:null,scenT0:0,lastSample:-1,hover:null,curTab:'overview',views:new WeakMap(),
   mins(){
@@ -1772,6 +1795,7 @@ const Ops={orders:[],log:[],notes:[],hist:[],logDirty:true,notesDirty:true,pipKi
       g.font='600 11px Saira,sans-serif';g.fillStyle='#0b1240';g.textAlign='center';g.fillText('Client geofence',SX(FENCE_C.x),SY(FENCE_C.z-FENCE_R)-6);g.fillText('M Arabia gantry',SX(GX),SY(-16));
       [[-82,14,'KSA 1907 RSA'],[-82,20,'KSA 3360 RSA']].forEach(([x,z,t])=>{g.fillStyle='#7a81a6';g.beginPath();g.arc(SX(x),SY(z),4,0,7);g.fill();});
     }
+    if(admin&&S.ghost){const gx=SX(S.ghost.x),gy=SY(S.ghost.z);g.fillStyle='#B45F06';g.beginPath();g.arc(gx,gy,6,0,7);g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke();g.font='600 11px Saira,sans-serif';g.fillStyle='#0b1240';g.textAlign='center';g.fillText('Real KSA 4821 RSA',gx,gy-11);}
     // origin
     g.fillStyle='#0b1240';g.beginPath();g.arc(SX(GX),SY(0),5,0,7);g.fill();g.fillStyle='#fff';g.beginPath();g.arc(SX(GX),SY(0),2,0,7);g.fill();
     // destination pin
@@ -2075,10 +2099,10 @@ const PARTS=[
   analogy:'The Face-ID Guard',does:'It photographs the truck\'s number plate and reads it automatically. If that plate is not on today\'s order, the truck goes nowhere.',
   spec:'IP ANPR camera with IR illuminator for day and night reads. Plate OCR, event + photo pushed to the PLC gateway over Ethernet. Reference plate: KSA 4821 RSA.',
   risk:'Without this, a guard waves through whichever truck offers the best tip, and nobody has a photo to prove what entered.'},
- {id:'rfid',n:2,emoji:'📡',name:'UHF RFID Reader',a:anchor(gantry,-71,4.1,6.2),cam:[-65.6,4,12.6],tgt:[-71,2.8,6],scen:'fake',
+ {id:'rfid',n:2,emoji:'📡',name:'UHF RFID Reader',a:anchor(gantry,-71,4.1,6.2),cam:[-65.6,4,12.6],tgt:[-71,2.8,6],scen:'clone',
   analogy:'The Digital Passport',does:'It reads a tamper-proof tag fixed to the truck chassis by radio. The tag must match the plate, so a copied plate alone is useless.',
   spec:'UHF RFID, EPC Gen2 / ISO 18000-6C. On-metal, tear-destruct chassis tag. Read range about 5 to 10 m. Reports to the PLC gateway for the ANPR + RFID dual match.',
-  risk:'Without this, a printed fake plate is enough to steal a fill slot and another customer\'s water.'},
+  risk:'Without this, a printed fake plate is enough to steal a fill slot and another customer\'s water. Copying plate and tag together beats the gate too, so the onboard unit check backs it up.'},
  {id:'valve',n:3,emoji:'⚙️',name:'Motorized Butterfly Valve',a:anchor(gantry,GX,PIPE_Y+1.5,2.4),cam:[-54.4,10,7.2],tgt:[GX,PIPE_Y+.3,Z_VALVE],scen:'chute',
   analogy:'The Mechanical Bouncer',does:'It is the door on the water pipe, and only the PLC holds the key. It opens after every check passes and slams shut at the exact quota.',
   spec:'Motorized butterfly valve, electric actuator, wafer body in line with the header. Open/closed feedback to the PLC. Status ring: red = locked, green = open. Fails closed on signal loss.',
@@ -2471,6 +2495,7 @@ function drawRadar(){
   g.beginPath();g.arc(RX(FENCE_C.x),RZ(FENCE_C.z),FENCE_R*1.99,0,7);g.strokeStyle=S.lockedOut?'#EF4444':'#10B981';g.lineWidth=2.5;g.setLineDash([7,5]);g.stroke();g.setLineDash([]);
   // trail
   g.strokeStyle='rgba(73,198,255,.8)';g.lineWidth=4;g.beginPath();trail.forEach((p,i)=>i?g.lineTo(RX(p[0]),RZ(p[1])):g.moveTo(RX(p[0]),RZ(p[1])));g.stroke();
+  if(S.ghost){const gx=RX(S.ghost.x),gy=RZ(S.ghost.z);g.fillStyle='#F5B83D';g.beginPath();g.arc(gx,gy,8,0,7);g.fill();g.font='600 18px Saira,sans-serif';g.textAlign='center';g.fillStyle='#fff';g.fillText('Real truck',gx,gy-30);}
   const x=RX(truck.position.x),y=RZ(truck.position.z),bad=!!S.alarm,c=bad?'#EF4444':'#49c6ff',pul=(performance.now()*.001)%1;
   g.beginPath();g.arc(x,y,8+pul*22,0,7);g.strokeStyle=c;g.globalAlpha=1-pul;g.lineWidth=2.5;g.stroke();g.globalAlpha=1;
   g.shadowColor=c;g.shadowBlur=20;g.fillStyle='#fff';g.beginPath();g.arc(x,y,7,0,7);g.fill();g.fillStyle=c;g.beginPath();g.arc(x,y,4.5,0,7);g.fill();g.shadowBlur=0;
