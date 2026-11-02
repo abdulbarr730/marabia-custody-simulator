@@ -1,0 +1,107 @@
+[
+{
+"key": "You need water on site. Open the app, choose how much, and tap once.",
+"speak": "You need water on site. Open the app, choose how much, and tap once.",
+"file": "clip00.wav"
+},
+{
+"key": "The same second, the order lands on the admin dashboard, and a tanker is assigned.",
+"speak": "The same second, the order lands on the admin dashboard, and a tanker is assigned.",
+"file": "clip01.wav"
+},
+{
+"key": "Two checks must agree: the camera reads the plate, the radio reader reads the hidden tag.",
+"speak": "Two checks must agree: the camera reads the plate, the radio reader reads the hidden tag.",
+"file": "clip02.wav"
+},
+{
+"key": "The chute seats in the roof hatch, and a sensor confirms it. No seal, no water.",
+"speak": "The chute seats in the roof hatch, and a sensor confirms it. No seal, no water.",
+"file": "clip03.wav"
+},
+{
+"key": "Water flows. The clamp-on meter counts every litre as the tank rises.",
+"speak": "Water flows. The clamp-on meter counts every litre as the tank rises.",
+"file": "clip04.wav"
+},
+{
+"key": "Sound pulses cross the pipe. A straight pipe run keeps the reading accurate.",
+"speak": "Sound pulses cross the pipe. A straight pipe run keeps the reading accurate.",
+"file": "clip05.wav"
+},
+{
+"key": "At exactly 15,000 L, the valve slams shut by itself. No driver, no argument.",
+"speak": "At exactly 15000 litres, the valve slams shut by itself. No driver, no argument.",
+"file": "clip06.wav"
+},
+{
+"key": "At exactly 10,000 L, the valve slams shut by itself. No driver, no argument.",
+"speak": "At exactly 10000 litres, the valve slams shut by itself. No driver, no argument.",
+"file": "clip07.wav"
+},
+{
+"key": "At exactly 5,000 L, the valve slams shut by itself. No driver, no argument.",
+"speak": "At exactly 5000 litres, the valve slams shut by itself. No driver, no argument.",
+"file": "clip08.wav"
+},
+{
+"key": "Your phone shows the tanker moving live, with an arrival time that updates.",
+"speak": "Your phone shows the tanker moving live, with an arrival time that updates.",
+"file": "clip09.wav"
+},
+{
+"key": "You see a truck and an arrival time. The engineering stays with our team.",
+"speak": "You see a truck and an arrival time. The engineering stays with our team.",
+"file": "clip10.wav"
+},
+{
+"key": "A probe checks the water all the way: 185 ppm. Any tampering shows up.",
+"speak": "A probe checks the water all the way: 185 parts per million. Any tampering shows up.",
+"file": "clip11.wav"
+},
+{
+"key": "The admin sees far more: speed, purity, seal status and every alarm, for every truck.",
+"speak": "The admin sees far more: speed, purity, seal status and every alarm, for every truck.",
+"file": "clip12.wav"
+},
+{
+"key": "The tanker is close. Its tap only unlocks inside this green ring.",
+"speak": "The tanker is close. Its tap only unlocks inside this green ring.",
+"file": "clip13.wav"
+},
+{
+"key": "The app asks if your tank is ready. You can tap yes, or the film will do it for you.",
+"speak": "The app asks if your tank is ready. You can tap yes, or the film will do it for you.",
+"file": "clip14.wav"
+},
+{
+"key": "The app asks if your tank is ready. Tap yes on the phone, or press Next.",
+"speak": "The app asks if your tank is ready. Tap yes on the phone, or press Next.",
+"file": "clip15.wav"
+},
+{
+"key": "Water moves into your tank, and you watch the litres climb on your phone.",
+"speak": "Water moves into your tank, and you watch the litres climb on your phone.",
+"file": "clip16.wav"
+},
+{
+"key": "Three separate instruments, one answer: 15,000 L loaded, 15,000 L carried, 15,000 L delivered.",
+"speak": "Three separate instruments, one answer: 15000 litres loaded, 15000 litres carried, 15000 litres delivered.",
+"file": "clip17.wav"
+},
+{
+"key": "Three separate instruments, one answer: 10,000 L loaded, 10,000 L carried, 10,000 L delivered.",
+"speak": "Three separate instruments, one answer: 10000 litres loaded, 10000 litres carried, 10000 litres delivered.",
+"file": "clip18.wav"
+},
+{
+"key": "Three separate instruments, one answer: 5,000 L loaded, 5,000 L carried, 5,000 L delivered.",
+"speak": "Three separate instruments, one answer: 5000 litres loaded, 5000 litres carried, 5000 litres delivered.",
+"file": "clip19.wav"
+},
+{
+"key": "Delivered, with a simple receipt. That is all you need to see.",
+"speak": "Delivered, with a simple receipt. That is all you need to see.",
+"file": "clip20.wav"
+}
+]
